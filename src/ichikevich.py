@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
-def simulate_network(Ne, Ni, frac_delete, MAX_EXC_WEIGTH, MAX_INH_WEIGTH):
+def simulate_network(Ne, Ni, NOISE_MAX):
     # GLOBAL PARAMETERS THAT SET OUR NEURON MODEL
     re = np.random.rand(Ne, 1)
     ri = np.random.rand(Ni, 1)
@@ -10,6 +10,9 @@ def simulate_network(Ne, Ni, frac_delete, MAX_EXC_WEIGTH, MAX_INH_WEIGTH):
     b = np.concatenate((0.2 * np.ones((Ne, 1)), 0.25 - 0.05 * ri))
     c = np.concatenate((-65 + 15 * re**2, -65 * np.ones((Ni, 1))))
     d = np.concatenate((8 - 6 * re**2, 2 * np.ones((Ni, 1))))
+    MAX_EXC_WEIGTH = 1
+    MAX_INH_WEIGTH = 0.5
+    frac_delete = 0.6
 
     # SET UP THE CONNECTIVITY MATRIX
     A = np.random.rand(Ne+Ni, Ne+Ni)
@@ -22,9 +25,6 @@ def simulate_network(Ne, Ni, frac_delete, MAX_EXC_WEIGTH, MAX_INH_WEIGTH):
 
     # The final connectivity matrix S
     S = A * W
-
-    # DEFINE NOISE STRENGTH
-    NOISE_MAX = 0.5
 
     # MAIN SIMULATION
     v = -65 * np.ones((Ne+Ni, 1))
@@ -48,4 +48,5 @@ def simulate_network(Ne, Ni, frac_delete, MAX_EXC_WEIGTH, MAX_INH_WEIGTH):
     plt.scatter(firings[:,0], firings[:,1])
     plt.xlabel('time (ms)')
     plt.ylabel('neuron')
+    plt.title(f"Ne ={Ne}, Ni={Ni}, Noise={NOISE_MAX}")
     plt.show()
